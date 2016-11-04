@@ -1,9 +1,30 @@
 import React from 'react';
+import SignupForm from './SignupForm';
 
+
+// class SignupPage extends React.Component{
+//     render(){
+//         return(
+//             <div className='jumbotron'>
+//                 <div className="row">
+//                     <div className="col-md-4 col-md-offset-4">
+//                         <SignupForm />
+//                     </div>
+//                 </div>
+//             </div> 
+//         );
+//     }
+// }
+
+// export default SignupPage;
 export default () => {
     return (
         <div className='jumbotron'>
-            <h2>This is signup page.</h2>
+            <div className="row">
+                <div className="col-md-4 col-md-offset-4">
+                    <SignupForm />
+                </div>
+            </div>
         </div> 
     );
 }
