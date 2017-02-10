@@ -2,9 +2,7 @@ import path from 'path';
 import webpack from 'webpack';
 
 export default {
-    devtools: 'inline-source-map',
-    debug: true,
-    //devtools: "inline-eval-cheap-source-map",
+    devtools: 'eval-source-map',
     entry: [
         'webpack-hot-middleware/client?reload=true',
         path.join(__dirname, '/client/index.js'),

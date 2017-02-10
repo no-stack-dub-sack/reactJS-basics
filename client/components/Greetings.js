@@ -1,9 +1,10 @@
 import React from 'react';
 
 export default () => {
-    return (
-        <div className='jumbotron'>
-            <h2>Hello World</h2>
-        </div> 
-    );
+  return (
+    <div>
+      <h1>Greet'ins Y'all!!!</h1>
+      <h3>-From Mr. Functional Component</h3>
+    </div>
+  );
 }
