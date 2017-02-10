@@ -21,11 +21,11 @@ export default {
             {
                 test: /\.js$/,
                 include: path.join(__dirname, 'client'),
-                loaders: ['babel']
+                loaders: [ 'babel' ]
             }
         ]
     },
     resolve: {
-        extentions: ['', '.js']
+        extentions: [ '', '.js' ]
     }
 }
