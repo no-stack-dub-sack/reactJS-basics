@@ -2,6 +2,8 @@ import React from 'react';
 import timezones from '../../data/timezones';
 import map from 'lodash/map';
 import classnames from 'classnames';
+import validateInput from '../../../server/shared/validations/signup';
+import TextFieldGroup from '../common/TextFieldGroup';
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -23,40 +25,27 @@ class SignupForm extends React.Component {
     });
   }
   
+  isValid = () => {
+    const { errors, isValid } = validateInput(this.state);
+    if(!isValid) {
+      this.setState({ errors });
+    }
+    return isValid;
+  }
+  
   handleSubmit = (e) => {
     e.preventDefault();
-    this.setState({ errors: {}, isLoading: true });
-    this.props.userSignupRequest(this.state).then(
-      () => {},
-      ({ data }) => this.setState({ errors: data, isLoading: false })
-    );
+    if(this.isValid()) {
+      this.setState({ errors: {}, isLoading: true });
+      this.props.userSignupRequest(this.state).then(
+        () => {},
+        ({ data }) => this.setState({ errors: data, isLoading: false })
+      );
+    }
   }
   
   render() {
     const { errors } = this.state;
-    const fields = ['username', 'email', 'password', 'password Confirmation'];
-    const inputs = fields.map(field => {
-      return (
-        <div 
-          key={field} 
-          className={classnames('form-group', {'has-error' : errors[field.replace(' ', '')]})}>
-          <label className="control-label">
-            {field.charAt(0).toUpperCase() + field.slice(1)}
-          </label>
-          <input 
-            onChange={this.handleChange}
-            value={this.state[field.replace(' ', '')]}
-            type="text"
-            name={field.replace(' ', '')}
-            className="form-control"
-          />
-          {
-            errors[field.replace(' ', '')] && 
-            <span className="help-block">{errors[field.replace(' ', '')]}</span>
-          } 
-        </div>
-      ); 
-    })
     const options = map(timezones, (val, key) => {
       return <option key={val} value={val}>{key}</option>
     });
@@ -64,8 +53,40 @@ class SignupForm extends React.Component {
       <form onSubmit={this.handleSubmit}>
         <h1>Join our community!</h1>
         
-        {inputs}
+        <TextFieldGroup 
+          field="username"
+          label="Username"
+          value={this.state.username}
+          error={errors.username}
+          onChange={this.handleChange}
+        />
         
+        <TextFieldGroup 
+          field="email"
+          label="Email"
+          value={this.state.email}
+          error={errors.email}
+          onChange={this.handleChange}
+        />
+        
+        <TextFieldGroup 
+          field="password"
+          label="Password"
+          value={this.state.password}
+          error={errors.password}
+          onChange={this.handleChange}
+          type="password"
+        />
+          
+        <TextFieldGroup 
+          field="passwordConfirmation"
+          label="Password Confirmation"
+          value={this.state.passwordConfirmation}
+          error={errors.passwordConfirmation}
+          onChange={this.handleChange}
+          type="password"
+        />
+
         <div className={classnames('form-group', {'has-error' : errors.timezone})}>
           <label className="control-label">Timezone</label>
           <select 
