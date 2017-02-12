@@ -4,6 +4,7 @@ import map from 'lodash/map';
 import classnames from 'classnames';
 import validateInput from '../../../server/shared/validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
+import fields from './fieldsObject';
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -52,46 +53,25 @@ class SignupForm extends React.Component {
   
   render() {
     const { errors } = this.state;
-    const options = map(timezones, (val, key) => {
-      return <option key={val} value={val}>{key}</option>
-    });
+    const inputs = fields.map(fieldObj => 
+      <TextFieldGroup 
+        key={fieldObj.field}
+        field={fieldObj.field}
+        label={fieldObj.label}
+        value={this.state[fieldObj.field]}
+        error={errors[fieldObj.field]}
+        type={fieldObj.type}
+        onChange={this.handleChange}
+      />
+    );
+    const options = map(timezones, (val, key) => 
+      <option key={val} value={val}>{key}</option>
+    );
     return (
       <form onSubmit={this.handleSubmit}>
         <h1>Join our community!</h1>
         
-        <TextFieldGroup 
-          field="username"
-          label="Username"
-          value={this.state.username}
-          error={errors.username}
-          onChange={this.handleChange}
-        />
-        
-        <TextFieldGroup 
-          field="email"
-          label="Email"
-          value={this.state.email}
-          error={errors.email}
-          onChange={this.handleChange}
-        />
-        
-        <TextFieldGroup 
-          field="password"
-          label="Password"
-          value={this.state.password}
-          error={errors.password}
-          onChange={this.handleChange}
-          type="password"
-        />
-          
-        <TextFieldGroup 
-          field="passwordConfirmation"
-          label="Password Confirmation"
-          value={this.state.passwordConfirmation}
-          error={errors.passwordConfirmation}
-          onChange={this.handleChange}
-          type="password"
-        />
+        {inputs}
 
         <div className={classnames('form-group', {'has-error' : errors.timezone})}>
           <label className="control-label">Timezone</label>

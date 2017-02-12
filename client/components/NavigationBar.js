@@ -7,7 +7,7 @@ export default () => {
       <div className="container-fluid">
         
         <div className="navbar-header">
-          <Link to="/" className="navbar-brand">Ill Nasty Son</Link>
+          <Link to="/" className="navbar-brand">Community of Cool</Link>
         </div>
         
         <div className="collapse navbar-collapse">

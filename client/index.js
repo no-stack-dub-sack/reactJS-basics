@@ -8,7 +8,7 @@ import { render } from 'react-dom';
 import rootReducer from './rootReducer';
 
 const store = createStore(
-  rootReducer,
+  rootReducer, // calls combineReducers? 
   compose(
     applyMiddleware(thunk),
     window.devToolsExtension ? window.devToolsExtension() : f => f
