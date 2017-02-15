@@ -5,6 +5,9 @@ import classnames from 'classnames';
 import validateInput from '../../../server/shared/validations/signup';
 import TextFieldGroup from '../common/TextFieldGroup';
 import fields from './fieldsObject';
+import { connect } from 'react-redux';
+import { doesUserExist } from '../../actions/signupActions';
+import isEmpty from 'lodash/isEmpty';
 
 class SignupForm extends React.Component {
   constructor(props) {
@@ -16,7 +19,8 @@ class SignupForm extends React.Component {
       passwordConfirmation: '',
       timezone: '',
       errors: {},
-      isLoading: false
+      isLoading: false,
+      invalid: false
     }
   }
   
@@ -24,6 +28,22 @@ class SignupForm extends React.Component {
     this.setState({
       [e.target.name]: e.target.value
     });
+  }
+  
+  handleCheckUserExists = (e) => {
+    const field = e.target.name;
+    const val = e.target.value;
+    if (val !== '') {
+      this.props.doesUserExist(val).then(res => {
+        let errors = this.state.errors;
+        if (res.data.user) {
+          errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} already exists`;
+        } else {
+          delete errors[field];
+        }
+        this.setState({ errors, invalid: !isEmpty(errors) });
+      });
+    }
   }
   
   isValid = () => {
@@ -53,16 +73,35 @@ class SignupForm extends React.Component {
   
   render() {
     const { errors } = this.state;
-    const inputs = fields.map(fieldObj => 
-      <TextFieldGroup 
-        key={fieldObj.field}
-        field={fieldObj.field}
-        label={fieldObj.label}
-        value={this.state[fieldObj.field]}
-        error={errors[fieldObj.field]}
-        type={fieldObj.type}
-        onChange={this.handleChange}
-      />
+    const inputs = fields.map(fieldObj => {
+      if (fieldObj.field === 'username' || fieldObj.field === 'email' ) {
+        return (
+          <TextFieldGroup 
+            key={fieldObj.field}
+            field={fieldObj.field}
+            label={fieldObj.label}
+            value={this.state[fieldObj.field]}
+            error={errors[fieldObj.field]}
+            type={fieldObj.type}
+            handleChange={this.handleChange}
+            checkUserExists={this.handleCheckUserExists}
+          />
+      );
+      } else {
+        return (
+          <TextFieldGroup 
+            key={fieldObj.field}
+            field={fieldObj.field}
+            label={fieldObj.label}
+            value={this.state[fieldObj.field]}
+            error={errors[fieldObj.field]}
+            type={fieldObj.type}
+            handleChange={this.handleChange}
+          />
+        );
+      }
+    }
+      
     );
     const options = map(timezones, (val, key) => 
       <option key={val} value={val}>{key}</option>
@@ -87,7 +126,7 @@ class SignupForm extends React.Component {
         </div>
         
         <div className="form-group">
-          <button disabled={this.state.isLoading} className="btn btn-primary btn-lg">
+          <button disabled={this.state.isLoading || this.state.invalid} title={classnames({'Please resolve errors' : this.state.invalid})} className="btn btn-primary btn-lg">
             Signup
           </button>
         </div>
@@ -99,11 +138,12 @@ class SignupForm extends React.Component {
 
 SignupForm.propTypes = {
   userSignupRequest: React.PropTypes.func.isRequired,
-  addFlashMessage: React.PropTypes.func.isRequired
+  addFlashMessage: React.PropTypes.func.isRequired,
+  doesUserExist: React.PropTypes.func.isRequired
 }
 
 SignupForm.contextTypes = {
   router: React.PropTypes.object.isRequired
 }
 
-export default SignupForm;
+export default connect(null, { doesUserExist })(SignupForm);

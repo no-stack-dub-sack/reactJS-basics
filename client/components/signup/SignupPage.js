@@ -22,5 +22,5 @@ SignupPage.propTypes = {
   addFlashMessage: React.PropTypes.func.isRequired
 }
 
-export default connect(null, {userSignupRequest, addFlashMessage})(SignupPage); 
+export default connect(null, { userSignupRequest, addFlashMessage })(SignupPage); 
 

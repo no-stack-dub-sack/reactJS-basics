@@ -17,6 +17,7 @@ function validateInput(data, otherValidatioins) { // calling this in router.post
   // if no user or email is entered, no user request is made
   // client side validations prevent this
   return User.query({ 
+    select: [ 'username', 'email' ],
     where: { email: data.email },
     orWhere: { username: data.username }
   }).fetch().then(user => {
@@ -36,6 +37,16 @@ function validateInput(data, otherValidatioins) { // calling this in router.post
     };
   });
 }
+
+router.get('/:identifier', (req, res) => {
+  User.query({
+    select: [ 'username', 'email' ],
+    where: { email: req.params.identifier },
+    orWhere: { username: req.params.identifier }
+  }).fetch().then(user => {
+    res.json({ user });
+  });
+});
 
 router.post('/', (req, res) => {
   // once this functions return errors obj and bool, determine how to proceed in then()
