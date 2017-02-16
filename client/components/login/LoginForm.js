@@ -15,14 +15,15 @@ class LoginPage extends React.Component {
     }
   }
   
+  // check that form is filled out
   isValid = () => {
     const { errors, isValid } = validateInput(this.state);
     
     if (!isValid) {
-      this.setState({ errors });
+      this.setState({ errors }); 
     }
     
-    return isValid; // <=== === === left off here 7min ep. #16
+    return isValid; 
   }
   
   handleSubmit = (e) => {
@@ -31,7 +32,14 @@ class LoginPage extends React.Component {
     if (this.isValid()) {
       this.setState({ errors: {}, isLoading: true });
       this.props.login(this.state).then(
-        (res) => this.context.router.push('/'),
+        (res) => {
+          this.props.addFlashMessage({
+            type: 'success',
+            text: 'Logged in. Welcome back!'
+          });
+          this.context.router.push('/');
+        },
+        // authorize credentials on server
         (err) => this.setState({ errors: err.data.errors, isLoading: false })
       )
     }
@@ -49,6 +57,8 @@ class LoginPage extends React.Component {
     return (
       <form onSubmit={this.handleSubmit}>
         <h1>Login</h1>
+        
+        { errors.form && <div className="alert alert-danger">{errors.form}</div> }
         
         <TextFieldGroup 
           field="identifier"
