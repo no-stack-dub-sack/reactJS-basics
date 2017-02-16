@@ -86,7 +86,7 @@ class SignupForm extends React.Component {
             handleChange={this.handleChange}
             checkUserExists={this.handleCheckUserExists}
           />
-      );
+        );
       } else {
         return (
           <TextFieldGroup 
@@ -100,9 +100,7 @@ class SignupForm extends React.Component {
           />
         );
       }
-    }
-      
-    );
+    });
     const options = map(timezones, (val, key) => 
       <option key={val} value={val}>{key}</option>
     );
