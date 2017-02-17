@@ -6,14 +6,18 @@ import { Router, browserHistory } from 'react-router';
 import { Provider } from 'react-redux';
 import { render } from 'react-dom';
 import rootReducer from './rootReducer';
+import setAuthorizationToken from './utils/setAuthorizationToken';
+import manageTokenStorage from './utils/manageTokenStorage';
 
 const store = createStore(
-  rootReducer, // calls combineReducers? 
+  rootReducer, 
   compose(
     applyMiddleware(thunk),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 );
+
+manageTokenStorage(store);
 
 render(
   <Provider store={store}>
