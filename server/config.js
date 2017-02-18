@@ -1,3 +1,3 @@
 export default {
-  jwSecret: 'tokenwhichisveryverysecretsodefinitelydonttellanyoneitsheresothanks'
+  jwtSecret: 'tokenwhichisveryverysecretsodefinitelydonttellanyoneitsheresothanks'
 }
