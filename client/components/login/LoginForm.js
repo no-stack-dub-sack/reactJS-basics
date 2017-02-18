@@ -3,6 +3,7 @@ import TextFieldGroup from '../common/TextFieldGroup';
 import validateInput from '../../../server/shared/validations/login';
 import { connect } from 'react-redux';
 import { login } from '../../actions/authActions';
+import { deleteFlashMessage } from '../../actions/flashMessages'
 
 class LoginPage extends React.Component {
   constructor(props) {
@@ -39,11 +40,19 @@ class LoginPage extends React.Component {
           });
           this.context.router.push('/');
         },
+        setTimeout( _ => {
+          this.props.flashMessages.forEach(message => {
+            if (message.text !== 'Logged in. Welcome back!') {
+              this.props.deleteFlashMessage(message.id);
+            }
+          });
+        }, 500),
         // authorize credentials on server
         (err) => this.setState({ errors: err.data.errors, isLoading: false })
       )
     }
   }
+  
   
   handleChange = (e) => {
     this.setState({
@@ -87,11 +96,17 @@ class LoginPage extends React.Component {
 }
 
 LoginPage.propTypes = {
-  login: React.PropTypes.func.isRequired
+  login: React.PropTypes.func.isRequired,
 }
 
 LoginPage.contextTypes = {
   router: React.PropTypes.object.isRequired
 }
 
-export default connect(null, { login })(LoginPage);
+function mapStateToProps(state) {
+  return {
+    flashMessages: state.flashMessages
+  }
+}
+
+export default connect(mapStateToProps, { login, deleteFlashMessage })(LoginPage);
